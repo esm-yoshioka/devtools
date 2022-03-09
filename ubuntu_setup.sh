@@ -14,8 +14,6 @@ sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/
 #=================================================
 sudo apt -y update
 sudo apt -yV upgrade
-sudo apt -yV autoremove
-sudo apt autoclean
 
 #=================================================
 #   Bash alias
@@ -68,4 +66,7 @@ echo 'password       ************' >> $NETFILE
 #=================================================
 #   End
 #=================================================
+sudo apt -yV autoremove
+sudo apt autoclean
+
 echo '=== When the installation is completed, restart the WSL2. ==='
