@@ -66,6 +66,15 @@ echo 'login          esm-yoshioka' >> $NETFILE
 echo 'password       ************' >> $NETFILE
 
 #=================================================
+#   Emacs
+#=================================================
+sudo apt install -y emacs 
+
+mkdir .emacs.d
+cd .emacs.d
+touch init.el
+
+#=================================================
 #   Other
 #=================================================
 mkdir git
