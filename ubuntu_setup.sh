@@ -4,6 +4,8 @@
 #     Author :esm-yoshioka
 #     Target :ubuntu 20.04 for WSL2
 
+cd ~
+
 #=================================================
 #   Change repository to Japan 
 #=================================================
