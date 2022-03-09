@@ -17,3 +17,7 @@
   - 不要になったVMの削除
     - wsl --unregister [Distro_name]  
     `wsl --unregister ubuntu_test`
+
+- .wslconfig
+  - WSL2全体の設定を定義。%USERPROFILE%配下に格納  
+  標準だとUSERPROFILEはC:\Users\[ユーザ名]
