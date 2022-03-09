@@ -49,6 +49,23 @@ sudo sh -c "echo '[interop]' >> $WSLFILE"
 sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
 
 #=================================================
+#   Git
+#=================================================
+sudo add-apt-repository -y ppa:git-core/ppa
+sudo apt update
+sudo apt -yV upgrade
+git --version
+
+git config --global user.name "esm-yoshioka"
+git config --global user.email "*********@*******"
+
+NETFILE=".netrc"
+[ ! -e $NETFILE ] && touch $NETFILE
+echo 'machine        github.com' >> $NETFILE
+echo 'login          esm-yoshioka' >> $NETFILE
+echo 'password       ************' >> $NETFILE
+
+#=================================================
 #   End
 #=================================================
-echo '=== When the installation is completed, restart the WSL. ==='
+echo '=== When the installation is completed, restart the WSL2. ==='
