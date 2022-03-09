@@ -5,5 +5,5 @@
   - ディストリビューションの確認  
 `wsl --list --online`
   - インストール
-    - wsl --install -d <Distro>  
+    - wsl --install -d [Distro]  
 `wsl --install -d ubuntu`
