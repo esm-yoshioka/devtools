@@ -10,6 +10,7 @@ cd ~
 #=================================================
 #   Parameter
 #=================================================
+IS_SETUP=false
 IS_GIT=false
 GITID="esm-yoshioka"
 GITMAIL="*****@*****"
@@ -22,6 +23,7 @@ IS_DOCKER=false
 #=================================================
 echo '#-------------------------------------'
 echo '  Install'
+echo '   setup =' $IS_SETUP
 echo '   git   =' $IS_GIT
 echo '   emacs =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
@@ -42,51 +44,50 @@ while true ; do
 done
 
 #=================================================
-#   Change repository to Japan 
+#   Setup WSL2
 #=================================================
-sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
+if "$IS_SETUP" ; then
+    echo '=== setup wsl environment ==='
+    
+    # change repository to japan
+    sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
 
-#=================================================
-#   Packages update 
-#=================================================
-sudo apt -y update
-sudo apt -yV upgrade
-
-#=================================================
-#   Bash alias
-#=================================================
-BASHFILE=".bash_aliases"
-
-if [ ! -e $BASHFILE ];then
+    # packages update
+    sudo apt -y update
+    sudo apt -yV upgrade
+    
+    # bash alias
+    BASHFILE=".bash_aliases"
+    
+    if [ ! -e $BASHFILE ];then
 	touch $BASHFILE
 	echo '#User Alias setting' > $BASHFILE
+    fi
+    echo 'alias lla='\''ls -alF'\' >> $BASHFILE
+    echo 'alias ll='\''ls -lF'\' >> $BASHFILE
+
+    source .bashrc
+
+    # japanese environment
+    sudo apt install -y language-pack-ja
+    sudo apt install -y manpages-ja manpages-ja-dev
+    
+    sudo update-locale LANG=ja_JP.UTF-8
+
+    # environment variable
+    WSLFILE="/etc/wsl.conf"
+
+    [ ! -e $WSLFILE ] && sudo touch $WSLFILE
+    sudo sh -c "echo '[interop]' >> $WSLFILE"
+    sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
 fi
-echo 'alias lla='\''ls -alF'\' >> $BASHFILE
-echo 'alias ll='\''ls -lF'\' >> $BASHFILE
-
-source .bashrc
-
-#=================================================
-#   Japanese environment
-#=================================================
-sudo apt install -y language-pack-ja
-sudo apt install -y manpages-ja manpages-ja-dev
-
-sudo update-locale LANG=ja_JP.UTF-8
-
-#=================================================
-#   Environment variable
-#=================================================
-WSLFILE="/etc/wsl.conf"
-
-[ ! -e $WSLFILE ] && sudo touch $WSLFILE
-sudo sh -c "echo '[interop]' >> $WSLFILE"
-sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
 
 #=================================================
 #   Git
 #=================================================
 if "$IS_GIT" ; then
+    echo '=== git install ==='
+
     sudo add-apt-repository -y ppa:git-core/ppa
     sudo apt update
     sudo apt -yV upgrade
@@ -108,6 +109,10 @@ fi
 #   Emacs
 #=================================================
 if "$IS_EMACS" ; then
+    echo '=== emacs install ==='
+
+    sudo apt update
+    sudo apt -yV upgrade
     sudo apt install -y emacs
 
     mkdir .emacs.d
@@ -119,8 +124,12 @@ fi
 #   DOCKER
 #=================================================
 if "$IS_DOCKER" ; then
-    sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-    curl -fsS L https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    echo '=== docker install ==='
+
+    sudo apt update
+    sudo apt -yV upgrade
+    sudo apt install -y ca-certificates curl gnupg lsb-release
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
     sudo apt update
