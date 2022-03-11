@@ -17,6 +17,7 @@ GITMAIL="*****@*****"
 GITPASS="***********"
 IS_EMACS=false
 IS_DOCKER=false
+DOCKERUSER="*****"
 
 #=================================================
 #   Run check
@@ -33,6 +34,10 @@ if "$IS_GIT" ; then
     echo '     git mail = ' $GITMAIL
     echo '     git pass = ' $GITPASS
 fi
+if "$IS_DOCKER" ; then
+    echo ''
+    echo '     docker run user = ' $DOCKERUSER
+fi
 echo '#-------------------------------------'
 
 while true ; do
@@ -48,17 +53,17 @@ done
 #=================================================
 if "$IS_SETUP" ; then
     echo '=== setup wsl environment ==='
-    
+
     # change repository to japan
     sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
 
     # packages update
     sudo apt -y update
     sudo apt -yV upgrade
-    
+
     # bash alias
     BASHFILE=".bash_aliases"
-    
+
     if [ ! -e $BASHFILE ];then
 	touch $BASHFILE
 	echo '#User Alias setting' > $BASHFILE
@@ -71,7 +76,7 @@ if "$IS_SETUP" ; then
     # japanese environment
     sudo apt install -y language-pack-ja
     sudo apt install -y manpages-ja manpages-ja-dev
-    
+
     sudo update-locale LANG=ja_JP.UTF-8
 
     # environment variable
@@ -134,6 +139,8 @@ if "$IS_DOCKER" ; then
 
     sudo apt update
     sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+    sudo usermod -aG docker $DOCKERUSER
 fi
 
 #=================================================
