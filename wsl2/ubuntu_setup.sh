@@ -15,6 +15,7 @@ GITID="esm-yoshioka"
 GITMAIL="*****@*****"
 GITPASS="***********"
 IS_EMACS=false
+IS_DOCKER=false
 
 #=================================================
 #   Run check
@@ -23,6 +24,7 @@ echo '#-------------------------------------'
 echo '  Install'
 echo '   git   =' $IS_GIT
 echo '   emacs =' $IS_EMACS
+echo '   docker =' $IS_DOCKER
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GITID
@@ -111,6 +113,18 @@ if "$IS_EMACS" ; then
     mkdir .emacs.d
     cd .emacs.d
     touch init.el
+fi
+
+#=================================================
+#   DOCKER
+#=================================================
+if "$IS_DOCKER" ; then
+    sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+    curl -fsS L https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+    sudo apt update
+    sudo apt install -y docker-ce docker-ce-cli containerd.io
 fi
 
 #=================================================
