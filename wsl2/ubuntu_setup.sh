@@ -18,15 +18,16 @@ GITPASS="***********"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKERUSER="*****"
+DOCKERCOMPOSE="2.3.3"
 
 #=================================================
 #   Run check
 #=================================================
 echo '#-------------------------------------'
 echo '  Install'
-echo '   setup =' $IS_SETUP
-echo '   git   =' $IS_GIT
-echo '   emacs =' $IS_EMACS
+echo '   setup  =' $IS_SETUP
+echo '   git    =' $IS_GIT
+echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
 if "$IS_GIT" ; then
     echo ''
@@ -37,6 +38,7 @@ fi
 if "$IS_DOCKER" ; then
     echo ''
     echo '     docker run user = ' $DOCKERUSER
+    echo '     docker-compose version = ' $DOCKERCOMPOSE
 fi
 echo '#-------------------------------------'
 
@@ -126,7 +128,7 @@ if "$IS_EMACS" ; then
 fi
 
 #=================================================
-#   DOCKER
+#   Docker, Docker-compose
 #=================================================
 if "$IS_DOCKER" ; then
     echo '=== docker install ==='
@@ -141,6 +143,9 @@ if "$IS_DOCKER" ; then
     sudo apt install -y docker-ce docker-ce-cli containerd.io
 
     sudo usermod -aG docker $DOCKERUSER
+
+    sudo curl -L 'https://github.com/docker/compose/releases/download/'$DOCKERCOMPOSE'/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
 fi
 
 #=================================================
