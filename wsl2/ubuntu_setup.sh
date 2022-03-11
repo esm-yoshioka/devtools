@@ -1,17 +1,20 @@
 #!/bin/bash
+#
 #   Ubuntu auto-setup shell
 #
 #     Author :esm-yoshioka
 #     Target :ubuntu 20.04 for WSL2
+#
 
 cd ~
 #=================================================
 #   Parameter
 #=================================================
+IS_GIT=falseG
 GITID="esm-yoshioka"
 GITMAIL="*****@*****"
 GITPASS="***********"
-
+IS_EMACS=false
 
 
 #=================================================
@@ -59,34 +62,39 @@ sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
 #=================================================
 #   Git
 #=================================================
-sudo add-apt-repository -y ppa:git-core/ppa
-sudo apt update
-sudo apt -yV upgrade
-git --version
+if "$IS_GIT" ; then
+    sudo add-apt-repository -y ppa:git-core/ppa
+    sudo apt update
+    sudo apt -yV upgrade
+    git --version
 
-git config --global user.name $GITID
-git config --global user.email $GITMAIL
+    git config --global user.name $GITID
+    git config --global user.email $GITMAIL
 
-NETFILE=".netrc"
-[ ! -e $NETFILE ] && touch $NETFILE
-echo 'machine        github.com' >> $NETFILE
-echo 'login          '$GITID >> $NETFILE
-echo 'password       '$GITPASS >> $NETFILE
+    NETFILE=".netrc"
+    [ ! -e $NETFILE ] && touch $NETFILE
+    echo 'machine        github.com' >> $NETFILE
+    echo 'login          '$GITID >> $NETFILE
+    echo 'password       '$GITPASS >> $NETFILE
+
+    mkdir git
+fi
 
 #=================================================
 #   Emacs
 #=================================================
-sudo apt install -y emacs 
+if "$IS_EMACS" ; then
+    sudo apt install -y emacs
 
-mkdir .emacs.d
-cd .emacs.d
-touch init.el
+    mkdir .emacs.d
+    cd .emacs.d
+    touch init.el
+fi
 
 #=================================================
 #   Other
 #=================================================
 cd ~
-mkdir git
 mkdir work
 
 #=================================================
