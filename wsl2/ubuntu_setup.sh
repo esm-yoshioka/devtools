@@ -5,6 +5,14 @@
 #     Target :ubuntu 20.04 for WSL2
 
 cd ~
+#=================================================
+#   Parameter
+#=================================================
+GITID="esm-yoshioka"
+GITMAIL="*****@*****"
+GITPASS="***********"
+
+
 
 #=================================================
 #   Change repository to Japan 
@@ -56,14 +64,14 @@ sudo apt update
 sudo apt -yV upgrade
 git --version
 
-git config --global user.name "esm-yoshioka"
-git config --global user.email "*********@*******"
+git config --global user.name $GITID
+git config --global user.email $GITMAIL
 
 NETFILE=".netrc"
 [ ! -e $NETFILE ] && touch $NETFILE
 echo 'machine        github.com' >> $NETFILE
-echo 'login          esm-yoshioka' >> $NETFILE
-echo 'password       ************' >> $NETFILE
+echo 'login          '$GITID >> $NETFILE
+echo 'password       '$GITPASS >> $NETFILE
 
 #=================================================
 #   Emacs
