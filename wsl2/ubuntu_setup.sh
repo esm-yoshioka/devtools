@@ -10,12 +10,34 @@ cd ~
 #=================================================
 #   Parameter
 #=================================================
-IS_GIT=falseG
+IS_GIT=false
 GITID="esm-yoshioka"
 GITMAIL="*****@*****"
 GITPASS="***********"
 IS_EMACS=false
 
+#=================================================
+#   Run check
+#=================================================
+echo '#-------------------------------------'
+echo '  Install'
+echo '   git   =' $IS_GIT
+echo '   emacs =' $IS_EMACS
+if "$IS_GIT" ; then
+    echo ''
+    echo '     git id = ' $GITID
+    echo '     git mail = ' $GITMAIL
+    echo '     git pass = ' $GITPASS
+fi
+echo '#-------------------------------------'
+
+while true ; do
+    read -p "Continue Setup?[y/N]" ans
+    case $ans in
+	[yY])break;;
+	*)exit;;
+    esac
+done
 
 #=================================================
 #   Change repository to Japan 
