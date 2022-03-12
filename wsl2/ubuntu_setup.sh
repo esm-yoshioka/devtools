@@ -18,7 +18,7 @@ GITPASS="***********"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKERUSER="*****"
-DOCKERCOMPOSE="2.3.3"
+DOCKERCOMPOSEVER="v2.3.3"
 
 #=================================================
 #   Run check
@@ -38,7 +38,7 @@ fi
 if "$IS_DOCKER" ; then
     echo ''
     echo '     docker run user = ' $DOCKERUSER
-    echo '     docker-compose version = ' $DOCKERCOMPOSE
+    echo '     docker-compose version = ' $DOCKERCOMPOSEVER
 fi
 echo '#-------------------------------------'
 
@@ -131,7 +131,7 @@ fi
 #   Docker, Docker-compose
 #=================================================
 if "$IS_DOCKER" ; then
-    echo '=== docker install ==='
+    echo '=== docker, docker-compose install ==='
 
     sudo apt update
     sudo apt -yV upgrade
@@ -144,7 +144,7 @@ if "$IS_DOCKER" ; then
 
     sudo usermod -aG docker $DOCKERUSER
 
-    sudo curl -L 'https://github.com/docker/compose/releases/download/'$DOCKERCOMPOSE'/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose
+    sudo curl -L 'https://github.com/docker/compose/releases/download/'$DOCKERCOMPOSEVER'/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
 fi
 
