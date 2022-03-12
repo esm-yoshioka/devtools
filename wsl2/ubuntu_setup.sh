@@ -102,6 +102,7 @@ if "$IS_GIT" ; then
 
     git config --global user.name $GITID
     git config --global user.email $GITMAIL
+    git config --global core.editor vim
 
     NETFILE=".netrc"
     [ ! -e $NETFILE ] && touch $NETFILE
