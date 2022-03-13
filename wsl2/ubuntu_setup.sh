@@ -12,13 +12,14 @@ cd ~
 #=================================================
 IS_SETUP=false
 IS_GIT=false
-GITID="esm-yoshioka"
-GITMAIL="*****@*****"
-GITPASS="***********"
+GIT_ID="esm-yoshioka"
+GIT_MAIL="*****@*****"
+GIT_PASS="***********"
 IS_EMACS=false
 IS_DOCKER=false
-DOCKERUSER="*****"
-DOCKERCOMPOSEVER="v2.3.3"
+DOCKER_USER="*****"
+DOCKER_COMPOSEVER="v2.3.3"
+DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 
 #=================================================
 #   Run check
@@ -31,14 +32,15 @@ echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
 if "$IS_GIT" ; then
     echo ''
-    echo '     git id = ' $GITID
-    echo '     git mail = ' $GITMAIL
-    echo '     git pass = ' $GITPASS
+    echo '     git id = ' $GIT_ID
+    echo '     git mail = ' $GIT_MAIL
+    echo '     git pass = ' $GIT_PASS
 fi
 if "$IS_DOCKER" ; then
     echo ''
-    echo '     docker run user = ' $DOCKERUSER
-    echo '     docker-compose version = ' $DOCKERCOMPOSEVER
+    echo '     docker run user = ' $DOCKER_USER
+    echo '     docker-compose version = ' $DOCKER_COMPOSEVER
+    echo '     docker config directory = ' $DOCKER_CONFIG
 fi
 echo '#-------------------------------------'
 
@@ -100,15 +102,15 @@ if "$IS_GIT" ; then
     sudo apt -yV upgrade
     git --version
 
-    git config --global user.name $GITID
-    git config --global user.email $GITMAIL
+    git config --global user.name $GIT_ID
+    git config --global user.email $GIT_MAIL
     git config --global core.editor vim
 
     NETFILE=".netrc"
     [ ! -e $NETFILE ] && touch $NETFILE
     echo 'machine        github.com' >> $NETFILE
-    echo 'login          '$GITID >> $NETFILE
-    echo 'password       '$GITPASS >> $NETFILE
+    echo 'login          '$GIT_ID >> $NETFILE
+    echo 'password       '$GIT_PASS >> $NETFILE
 
     mkdir git
 fi
@@ -134,6 +136,7 @@ fi
 if "$IS_DOCKER" ; then
     echo '=== docker, docker-compose install ==='
 
+    # docker
     sudo apt update
     sudo apt -yV upgrade
     sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
@@ -143,7 +146,7 @@ if "$IS_DOCKER" ; then
     sudo apt update
     sudo apt install -y docker-ce docker-ce-cli containerd.io
 
-    sudo usermod -aG docker $DOCKERUSER
+    sudo usermod -aG docker $DOCKER_USER
 
     # start docker service at startup
     sudo sh -c "echo 'none none rc defaults 0 0' >> /etc/fstab"
@@ -151,9 +154,11 @@ if "$IS_DOCKER" ; then
     sudo chmod +x /sbin/mount.rc
     sudo sh -c "echo 'service docker start' >> /sbin/mount.rc"
     sudo sh -c "echo 'mkdir -p /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd' >> /sbin/mount.rc"
-    
-##    sudo curl -L 'https://github.com/docker/compose/releases/download/'$DOCKERCOMPOSEVER'/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose
-##    sudo chmod +x /usr/local/bin/docker-compose
+
+    # docker-compoes
+    mkdir -p $DOCKER_CONFIG/cli-plugins
+    curl -SL 'https://github.com/docker/compose/releases/download/'$DOCKER_COMPOSEVER'/docker-compose-linux-x86_64 -o '$DOCKER_CONFIG'/cli-plugins/docker-compose'
+    chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 fi
 
 #=================================================
