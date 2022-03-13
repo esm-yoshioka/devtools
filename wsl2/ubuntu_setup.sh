@@ -140,7 +140,7 @@ if "$IS_DOCKER" ; then
     sudo apt update
     sudo apt -yV upgrade
     sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    curl -SL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
     sudo apt update
@@ -157,7 +157,7 @@ if "$IS_DOCKER" ; then
 
     # docker-compoes
     mkdir -p $DOCKER_CONFIG/cli-plugins
-    curl -SL 'https://github.com/docker/compose/releases/download/'$DOCKER_COMPOSEVER'/docker-compose-linux-x86_64 -o '$DOCKER_CONFIG'/cli-plugins/docker-compose'
+    curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
     chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 fi
 
