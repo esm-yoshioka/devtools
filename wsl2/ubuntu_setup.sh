@@ -18,7 +18,7 @@ GIT_PASS="***********"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="*****"
-DOCKER_COMPOSEVER="v2.3.3"
+DOCKER_COMPOSEVER="v2.2.3"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 
 #=================================================
