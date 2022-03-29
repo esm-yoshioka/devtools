@@ -20,7 +20,6 @@ IS_DOCKER=false
 DOCKER_USER="*****"
 DOCKER_COMPOSEVER="v2.2.3"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-IS_JAVA=false
 
 #=================================================
 #   Run check
@@ -160,15 +159,6 @@ if "$IS_DOCKER" ; then
     mkdir -p $DOCKER_CONFIG/cli-plugins
     curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
     chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
-fi
-
-#=================================================
-#   Docker, Docker-compose
-#=================================================
-if "$IS_JAVA" ; then
-    sudo apt update
-    sudo apt -yV upgrade
-    sudo apt install -y openjdk-11-jdk
 fi
 
 #=================================================
