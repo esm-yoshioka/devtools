@@ -20,6 +20,7 @@ IS_DOCKER=false
 DOCKER_USER="*****"
 DOCKER_COMPOSEVER="v2.2.3"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+IS_JDK11=false
 
 #=================================================
 #   Run check
@@ -30,6 +31,7 @@ echo '   setup  =' $IS_SETUP
 echo '   git    =' $IS_GIT
 echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
+echo '   jdk11  =' $IS_JDK11
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -159,6 +161,15 @@ if "$IS_DOCKER" ; then
     mkdir -p $DOCKER_CONFIG/cli-plugins
     curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
     chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+fi
+
+#=================================================
+#   OpenJDK11
+#=================================================
+if "$IS_JDK11" ; then
+    sudo apt update
+    sudo apt -yV upgrade
+    sudo apt install -y openjdk-11-jdk
 fi
 
 #=================================================
