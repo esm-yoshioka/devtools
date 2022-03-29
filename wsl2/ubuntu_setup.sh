@@ -20,7 +20,7 @@ IS_DOCKER=false
 DOCKER_USER="*****"
 DOCKER_COMPOSEVER="v2.2.3"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-IS_JAVA=false
+IS_JDK11=false
 
 #=================================================
 #   Run check
@@ -31,6 +31,7 @@ echo '   setup  =' $IS_SETUP
 echo '   git    =' $IS_GIT
 echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
+echo '   jdk11  =' $IS_JKD11
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -165,7 +166,7 @@ fi
 #=================================================
 #   Docker, Docker-compose
 #=================================================
-if "$IS_JAVA" ; then
+if "$IS_JDK11" ; then
     sudo apt update
     sudo apt -yV upgrade
     sudo apt install -y openjdk-11-jdk
