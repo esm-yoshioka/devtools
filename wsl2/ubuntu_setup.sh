@@ -22,6 +22,9 @@ DOCKER_USER="*****"
 DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 IS_JDK11=false
+IS_NODEJS=false
+NVMVER="v0.39.1"
+NODEJSVER="12"
 
 #=================================================
 #   Run check
@@ -33,6 +36,7 @@ echo '   git    =' $IS_GIT
 echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
 echo '   jdk11  =' $IS_JDK11
+echo '   nodejs =' $IS_NODEJS
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -45,6 +49,12 @@ if "$IS_DOCKER" ; then
     echo '     docker-compose version = ' $DOCKER_COMPOSEVER
     echo '     docker config directory = ' $DOCKER_CONFIG
 fi
+if "$IS_NODEJS" ; then
+    echo ''
+    echo '     nvm version    = ' $NVMVER
+    echo '     nodejs version = ' $NODEJSVER
+fi
+
 echo '#-------------------------------------'
 
 while true ; do
@@ -178,6 +188,19 @@ if "$IS_JDK11" ; then
     sudo apt update
     sudo apt -yV upgrade
     sudo apt install -y openjdk-11-jdk
+fi
+
+#=================================================
+#   NVM, nodejs
+#=================================================
+if "$IS_NODEJS" ; then
+    echo '=== nvm, nodejs install ==='
+
+    # nvm
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
+
+    #nodejs
+    nvm install $NODEJSVER
 fi
 
 #=================================================
