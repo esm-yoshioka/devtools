@@ -87,8 +87,6 @@ if "$IS_SETUP" ; then
     echo 'alias lla='\''ls -alF'\' >> $BASHFILE
     echo 'alias ll='\''ls -lF'\' >> $BASHFILE
 
-    source .bashrc
-
     # japanese environment
     sudo apt install -y language-pack-ja
     sudo apt install -y manpages-ja manpages-ja-dev
@@ -112,7 +110,6 @@ if "$IS_GIT" ; then
     sudo add-apt-repository -y ppa:git-core/ppa
     sudo apt update
     sudo apt -yV upgrade
-    git --version
 
     git config --global user.name $GIT_ID
     git config --global user.email $GIT_MAIL
