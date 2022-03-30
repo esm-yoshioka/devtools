@@ -54,7 +54,6 @@ if "$IS_NODEJS" ; then
     echo '     nvm version    = ' $NVMVER
     echo '     nodejs version = ' $NODEJSVER
 fi
-
 echo '#-------------------------------------'
 
 while true ; do
@@ -69,7 +68,7 @@ done
 #   Setup WSL2
 #=================================================
 if "$IS_SETUP" ; then
-    echo '=== setup wsl environment ==='
+    echo '===== setup wsl environment ====='
 
     # change repository to japan
     sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
@@ -108,7 +107,7 @@ fi
 #   Git
 #=================================================
 if "$IS_GIT" ; then
-    echo '=== git install ==='
+    echo '===== git install ====='
 
     sudo add-apt-repository -y ppa:git-core/ppa
     sudo apt update
@@ -132,7 +131,7 @@ fi
 #   Emacs
 #=================================================
 if "$IS_EMACS" ; then
-    echo '=== emacs install ==='
+    echo '===== emacs install ====='
 
     sudo apt update
     sudo apt -yV upgrade
@@ -147,7 +146,7 @@ fi
 #   Docker, Docker-compose
 #=================================================
 if "$IS_DOCKER" ; then
-    echo '=== docker, docker-compose install ==='
+    echo '===== docker, docker-compose install ====='
 
     # docker
     sudo apt update
@@ -185,6 +184,8 @@ fi
 #   OpenJDK11
 #=================================================
 if "$IS_JDK11" ; then
+    echo '===== OpenJDK11 install ====='
+    
     sudo apt update
     sudo apt -yV upgrade
     sudo apt install -y openjdk-11-jdk
@@ -194,7 +195,7 @@ fi
 #   NVM, nodejs
 #=================================================
 if "$IS_NODEJS" ; then
-    echo '=== nvm, nodejs install ==='
+    echo '===== nvm, nodejs install ====='
 
     # nvm
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
@@ -215,4 +216,4 @@ mkdir work
 sudo apt -yV autoremove
 sudo apt autoclean
 
-echo '=== When the installation is completed, restart the WSL2. ==='
+echo '===== When the installation is completed, restart the WSL2. ====='
