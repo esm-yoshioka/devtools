@@ -25,6 +25,7 @@ IS_JDK11=false
 IS_NODEJS=false
 NVMVER="v0.39.1"
 NODEJSVER="12"
+IS_YARN=false
 
 #=================================================
 #   Run check
@@ -37,6 +38,7 @@ echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
 echo '   jdk11  =' $IS_JDK11
 echo '   nodejs =' $IS_NODEJS
+echo '   yarn   =' $IS_YARN
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -200,6 +202,15 @@ if "$IS_NODEJS" ; then
 
     #nodejs
     nvm install $NODEJSVER
+fi
+
+#=================================================
+#   Yarn
+#=================================================
+if "$IS_YARN" ; then
+    echo '===== Yarn install ====='
+
+    npm install -g yarn
 fi
 
 #=================================================
