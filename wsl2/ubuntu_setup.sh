@@ -131,6 +131,8 @@ fi
 #=================================================
 if "$IS_EMACS" ; then
     echo '===== emacs install ====='
+    sudo apt -yV autoremove
+    sudo apt autoclean
 
     sudo apt update
     sudo apt -yV upgrade
