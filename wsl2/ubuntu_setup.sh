@@ -196,6 +196,7 @@ if "$IS_NODEJS" ; then
 
     # nvm
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
+    . ~/.nvm/nvm.sh
 
     #nodejs
     nvm install $NODEJSVER
