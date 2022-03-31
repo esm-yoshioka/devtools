@@ -215,3 +215,5 @@ sudo apt -yV autoremove
 sudo apt autoclean
 
 echo '===== When the installation is completed, restart the WSL2. ====='
+
+exec $SHELL --login
