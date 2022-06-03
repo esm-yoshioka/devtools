@@ -3,11 +3,16 @@
 
 ## WSL2 memo
 - WSL2でのOSインストール
-  - ディストリビューションの確認  
-  `wsl --list --online`
+  - インストール可能なディストリビューションの確認  
+  `wsl -l -o`
   - インストール
     - wsl --install -d [Distro_name]  
     `wsl --install -d ubuntu`
+  - インストールされているディストリビューションを一覧表示
+  `wsl -l -v`
+  - 指定したディストリビューションを停止
+    - wsl -t [Distro_name]  
+    `wsl -t develop`
   - バックアップ
     - wsl --export [Distro_name] [File]  
     `wsl --export ubuntu ubuntu_back_20220309.tar`
