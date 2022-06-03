@@ -8,7 +8,7 @@
   - インストール
     - wsl --install -d [Distro_name]  
     `wsl --install -d ubuntu`
-  - インストールされているディストリビューションを一覧表示
+  - インストールされているディストリビューションを一覧表示 
   `wsl -l -v`
   - 指定したディストリビューションを停止
     - wsl -t [Distro_name]  
