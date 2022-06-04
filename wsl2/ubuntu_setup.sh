@@ -3,7 +3,7 @@
 #   Ubuntu auto-setup shell
 #
 #     Author :esm-yoshioka
-#     Target :ubuntu 20.04 for WSL2
+#     Target :ubuntu 22.04 for WSL2
 #
 
 cd ~
@@ -18,7 +18,7 @@ GIT_PASS="***********"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="*****"
-## DOCKER_COMPOSEVER="v2.2.3"
+## DOCKER_COMPOSEVER="v2.6.0"
 DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 IS_JDK11=false
