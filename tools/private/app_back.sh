@@ -8,7 +8,7 @@ cd ..
 mig_flg=0
 
 while getopts "m" optKey; do
-    case "$opeKey" in
+    case "$optKey" in
         m)
             mig_flg=1
 	    ;;
