@@ -3,7 +3,7 @@
 #   Ubuntu auto-setup shell
 #
 #     Author :esm-yoshioka
-#     Target :ubuntu 20.04 for WSL2
+#     Target :ubuntu 22.04 for WSL2
 #
 
 cd ~
@@ -18,8 +18,14 @@ GIT_PASS="***********"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="*****"
-DOCKER_COMPOSEVER="v2.2.3"
+## DOCKER_COMPOSEVER="v2.6.0"
+DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+IS_JDK11=false
+IS_NODEJS=false
+NVMVER="v0.39.1"
+NODEJSVER="12"
+IS_YARN=false
 
 #=================================================
 #   Run check
@@ -30,6 +36,9 @@ echo '   setup  =' $IS_SETUP
 echo '   git    =' $IS_GIT
 echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
+echo '   jdk11  =' $IS_JDK11
+echo '   nodejs =' $IS_NODEJS
+echo '   yarn   =' $IS_YARN
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -41,6 +50,11 @@ if "$IS_DOCKER" ; then
     echo '     docker run user = ' $DOCKER_USER
     echo '     docker-compose version = ' $DOCKER_COMPOSEVER
     echo '     docker config directory = ' $DOCKER_CONFIG
+fi
+if "$IS_NODEJS" ; then
+    echo ''
+    echo '     nvm version    = ' $NVMVER
+    echo '     nodejs version = ' $NODEJSVER
 fi
 echo '#-------------------------------------'
 
@@ -56,7 +70,7 @@ done
 #   Setup WSL2
 #=================================================
 if "$IS_SETUP" ; then
-    echo '=== setup wsl environment ==='
+    echo '===== setup wsl environment ====='
 
     # change repository to japan
     sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
@@ -74,8 +88,6 @@ if "$IS_SETUP" ; then
     fi
     echo 'alias lla='\''ls -alF'\' >> $BASHFILE
     echo 'alias ll='\''ls -lF'\' >> $BASHFILE
-
-    source .bashrc
 
     # japanese environment
     sudo apt install -y language-pack-ja
@@ -95,12 +107,11 @@ fi
 #   Git
 #=================================================
 if "$IS_GIT" ; then
-    echo '=== git install ==='
+    echo '===== git install ====='
 
     sudo add-apt-repository -y ppa:git-core/ppa
     sudo apt update
     sudo apt -yV upgrade
-    git --version
 
     git config --global user.name $GIT_ID
     git config --global user.email $GIT_MAIL
@@ -119,7 +130,9 @@ fi
 #   Emacs
 #=================================================
 if "$IS_EMACS" ; then
-    echo '=== emacs install ==='
+    echo '===== emacs install ====='
+    sudo apt -yV autoremove
+    sudo apt autoclean
 
     sudo apt update
     sudo apt -yV upgrade
@@ -134,7 +147,13 @@ fi
 #   Docker, Docker-compose
 #=================================================
 if "$IS_DOCKER" ; then
-    echo '=== docker, docker-compose install ==='
+    echo '===== docker, docker-compose install ====='
+
+    # setting for iptables
+    echo '**********************************************************'
+    echo '***  for Ubuntu22.04 or later, select iptables-legacy  ***'
+    echo '**********************************************************'
+    sudo update-alternatives --config iptables
 
     # docker
     sudo apt update
@@ -156,9 +175,50 @@ if "$IS_DOCKER" ; then
     sudo sh -c "echo 'mkdir -p /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd' >> /sbin/mount.rc"
 
     # docker-compoes
-    mkdir -p $DOCKER_CONFIG/cli-plugins
-    curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-    chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+    if [ ${DOCKER_COMPOSEVER:0:2} = "1." ]; then
+	sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+    elif [ ${DOCKER_COMPOSEVER:0:2} = "v2" ]; then
+	mkdir -p $DOCKER_CONFIG/cli-plugins
+	curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+	chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+    else
+	echo '!!!!!   Invalid docker-compose version  !!!!!'
+    fi
+fi
+
+#=================================================
+#   OpenJDK11
+#=================================================
+if "$IS_JDK11" ; then
+    echo '===== OpenJDK11 install ====='
+    
+    sudo apt update
+    sudo apt -yV upgrade
+    sudo apt install -y openjdk-11-jdk
+fi
+
+#=================================================
+#   NVM, nodejs
+#=================================================
+if "$IS_NODEJS" ; then
+    echo '===== nvm, nodejs install ====='
+
+    # nvm
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
+    . ~/.nvm/nvm.sh
+
+    #nodejs
+    nvm install $NODEJSVER
+fi
+
+#=================================================
+#   Yarn
+#=================================================
+if "$IS_YARN" ; then
+    echo '===== Yarn install ====='
+
+    npm install -g yarn
 fi
 
 #=================================================
@@ -173,4 +233,6 @@ mkdir work
 sudo apt -yV autoremove
 sudo apt autoclean
 
-echo '=== When the installation is completed, restart the WSL2. ==='
+echo '===== When the installation is completed, restart the WSL2. ====='
+
+exec $SHELL --login
