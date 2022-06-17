@@ -16,6 +16,7 @@ GIT_ID="esm-yoshioka"
 GIT_MAIL="*****@*****"
 GIT_PASS="***********"
 IS_EMACS=false
+EMACSVER="28"
 IS_DOCKER=false
 DOCKER_USER="*****"
 ## DOCKER_COMPOSEVER="v2.6.0"
@@ -44,6 +45,10 @@ if "$IS_GIT" ; then
     echo '     git id = ' $GIT_ID
     echo '     git mail = ' $GIT_MAIL
     echo '     git pass = ' $GIT_PASS
+fi
+if "$IS_EMACS" ; then
+    echo ''
+    echo '     emacs version = ' $EMACSVER
 fi
 if "$IS_DOCKER" ; then
     echo ''
@@ -131,12 +136,14 @@ fi
 #=================================================
 if "$IS_EMACS" ; then
     echo '===== emacs install ====='
+    sudo apt remove -y emacs
     sudo apt -yV autoremove
     sudo apt autoclean
 
+    sudo add-apt-repository -y ppa:kelleyk/emacs
     sudo apt update
     sudo apt -yV upgrade
-    sudo apt install -y emacs
+    sudo apt install -y emacs$EMACSVER
 
     mkdir .emacs.d
     cd .emacs.d
