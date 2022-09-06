@@ -3,7 +3,7 @@
 #   Ubuntu auto-setup shell
 #
 #     Author :esm-yoshioka
-#     Target :ubuntu 20.04 for WSL2
+#     Target :ubuntu 22.04 for WSL2
 #
 
 cd ~
