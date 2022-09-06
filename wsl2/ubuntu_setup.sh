@@ -26,6 +26,7 @@ IS_NODEJS=false
 NVMVER="v0.39.1"
 NODEJSVER="12"
 IS_YARN=false
+IS_FCESS=false
 
 #=================================================
 #   Run check
@@ -39,6 +40,7 @@ echo '   docker =' $IS_DOCKER
 echo '   jdk11  =' $IS_JDK11
 echo '   nodejs =' $IS_NODEJS
 echo '   yarn   =' $IS_YARN
+echo '   f.cess =' $IS_FCESS
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -215,6 +217,24 @@ if "$IS_YARN" ; then
     npm install -g yarn
 fi
 
+#=================================================
+#   F.CESS
+#=================================================
+if "$IS_FCESS" ; then
+    echo '===== f.cess install ====='
+
+    if [ ! -d ~/git/ ]; then
+	   mkdir ~/git
+    fi 
+    cd ~/git
+    git clone https://github.com/esminc/fcess-api-spec.git
+    git clone https://github.com/esminc/fcess-frontend.git
+    git clone https://github.com/esminc/fcess-backend.git
+    git clone https://github.com/esminc/fcess-manual.git
+    git clone https://github.com/esminc/fcess-manifest.git
+fi
+
+#=================================================
 #=================================================
 #   Other
 #=================================================
