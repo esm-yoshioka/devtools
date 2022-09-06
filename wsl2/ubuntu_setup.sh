@@ -15,6 +15,7 @@ IS_GIT=false
 GIT_ID="esm-yoshioka"
 GIT_MAIL="mail address"
 GIT_PASS="personal access tokens"
+GIT_DIR="~/git"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="*****"
@@ -46,6 +47,7 @@ if "$IS_GIT" ; then
     echo '     git id = ' $GIT_ID
     echo '     git mail = ' $GIT_MAIL
     echo '     git pass = ' $GIT_PASS
+    echo '     git dir = ' $GIT_DIR
 fi
 if "$IS_DOCKER" ; then
     echo ''
@@ -125,7 +127,7 @@ if "$IS_GIT" ; then
     echo 'login          '$GIT_ID >> $NETFILE
     echo 'password       '$GIT_PASS >> $NETFILE
 
-    mkdir git
+    mkdir $GIT_DIR
 fi
 
 #=================================================
@@ -204,7 +206,7 @@ if "$IS_NODEJS" ; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
     . ~/.nvm/nvm.sh
 
-    #nodejs
+    # nodejs
     nvm install $NODEJSVER
 fi
 
@@ -223,10 +225,12 @@ fi
 if "$IS_FCESS" ; then
     echo '===== f.cess install ====='
 
-    if [ ! -d ~/git/ ]; then
-	   mkdir ~/git
+    if [ ! -d $GIT_DIR ]; then
+	   mkdir $GIT_DIR 
     fi 
-    cd ~/git
+    
+    # git clone
+    cd $GIT_DIR 
     git clone https://github.com/esminc/fcess-api-spec.git
     git clone https://github.com/esminc/fcess-frontend.git
     git clone https://github.com/esminc/fcess-backend.git
