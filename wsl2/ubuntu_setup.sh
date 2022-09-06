@@ -13,8 +13,9 @@ cd ~
 IS_SETUP=false
 IS_GIT=false
 GIT_ID="esm-yoshioka"
-GIT_MAIL="*****@*****"
-GIT_PASS="***********"
+GIT_MAIL="mail address"
+GIT_PASS="personal access tokens"
+GIT_DIR="~/git"
 IS_EMACS=false
 EMACSVER="28-nativecomp"
 IS_DOCKER=false
@@ -27,6 +28,7 @@ IS_NODEJS=false
 NVMVER="v0.39.1"
 NODEJSVER="12"
 IS_YARN=false
+IS_FCESS=false
 
 #=================================================
 #   Run check
@@ -40,11 +42,13 @@ echo '   docker =' $IS_DOCKER
 echo '   jdk11  =' $IS_JDK11
 echo '   nodejs =' $IS_NODEJS
 echo '   yarn   =' $IS_YARN
+echo '   f.cess =' $IS_FCESS
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
     echo '     git mail = ' $GIT_MAIL
     echo '     git pass = ' $GIT_PASS
+    echo '     git dir = ' $GIT_DIR
 fi
 if "$IS_EMACS" ; then
     echo ''
@@ -128,7 +132,7 @@ if "$IS_GIT" ; then
     echo 'login          '$GIT_ID >> $NETFILE
     echo 'password       '$GIT_PASS >> $NETFILE
 
-    mkdir git
+    mkdir $GIT_DIR
 fi
 
 #=================================================
@@ -215,7 +219,7 @@ if "$IS_NODEJS" ; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
     . ~/.nvm/nvm.sh
 
-    #nodejs
+    # nodejs
     nvm install $NODEJSVER
 fi
 
@@ -228,6 +232,26 @@ if "$IS_YARN" ; then
     npm install -g yarn
 fi
 
+#=================================================
+#   F.CESS
+#=================================================
+if "$IS_FCESS" ; then
+    echo '===== f.cess install ====='
+
+    if [ ! -d $GIT_DIR ]; then
+	   mkdir $GIT_DIR 
+    fi 
+    
+    # git clone
+    cd $GIT_DIR 
+    git clone https://github.com/esminc/fcess-api-spec.git
+    git clone https://github.com/esminc/fcess-frontend.git
+    git clone https://github.com/esminc/fcess-backend.git
+    git clone https://github.com/esminc/fcess-manual.git
+    git clone https://github.com/esminc/fcess-manifest.git
+fi
+
+#=================================================
 #=================================================
 #   Other
 #=================================================
