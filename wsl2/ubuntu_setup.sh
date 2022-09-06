@@ -13,8 +13,8 @@ cd ~
 IS_SETUP=false
 IS_GIT=false
 GIT_ID="esm-yoshioka"
-GIT_MAIL="*****@*****"
-GIT_PASS="***********"
+GIT_MAIL="mail address"
+GIT_PASS="personal access tokens"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="*****"
