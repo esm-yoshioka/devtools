@@ -3,7 +3,7 @@
 #   Ubuntu auto-setup shell
 #
 #     Author :esm-yoshioka
-#     Target :ubuntu 22.04 for WSL2
+#     Target :ubuntu 22.04
 #
 
 cd ~
@@ -11,6 +11,7 @@ cd ~
 #   Parameter
 #=================================================
 IS_SETUP=false
+IS_WSL2=false
 IS_GIT=false
 GIT_ID="esm-yoshioka"
 GIT_MAIL="mail address"
@@ -36,6 +37,7 @@ IS_FCESS=false
 echo '#-------------------------------------'
 echo '  Install'
 echo '   setup  =' $IS_SETUP
+echo '   wsl2   =' $IS_WSL2
 echo '   git    =' $IS_GIT
 echo '   emacs  =' $IS_EMACS
 echo '   docker =' $IS_DOCKER
@@ -76,10 +78,10 @@ while true ; do
 done
 
 #=================================================
-#   Setup WSL2
+#   Setup Ubuntu
 #=================================================
 if "$IS_SETUP" ; then
-    echo '===== setup wsl environment ====='
+    echo '===== setup ubuntu environment ====='
 
     # change repository to japan
     sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
@@ -104,12 +106,14 @@ if "$IS_SETUP" ; then
 
     sudo update-locale LANG=ja_JP.UTF-8
 
-    # environment variable
-    WSLFILE="/etc/wsl.conf"
-
-    [ ! -e $WSLFILE ] && sudo touch $WSLFILE
-    sudo sh -c "echo '[interop]' >> $WSLFILE"
-    sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
+    if "$IS_WSL2" ; then
+	# environment variable
+	WSLFILE="/etc/wsl.conf"
+	
+	[ ! -e $WSLFILE ] && sudo touch $WSLFILE
+	sudo sh -c "echo '[interop]' >> $WSLFILE"
+	sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
+    fi
 fi
 
 #=================================================
