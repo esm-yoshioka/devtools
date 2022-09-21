@@ -156,6 +156,8 @@ if "$IS_EMACS" ; then
     mkdir .emacs.d
     cd .emacs.d
     touch init.el
+
+    cd ~
 fi
 
 #=================================================
@@ -257,13 +259,14 @@ if "$IS_FCESS" ; then
     git clone https://github.com/esminc/fcess-backend.git
     git clone https://github.com/esminc/fcess-manual.git
     git clone https://github.com/esminc/fcess-manifest.git
+
+    cd ~
 fi
 
 #=================================================
 #=================================================
 #   Other
 #=================================================
-cd ~
 mkdir work
 
 #=================================================
