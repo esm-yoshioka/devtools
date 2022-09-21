@@ -10,26 +10,26 @@ cd ~
 #=================================================
 #   Parameter
 #=================================================
-IS_SETUP=false
-IS_WSL2=false
-IS_GIT=false
+IS_SETUP=true
+IS_WSL2=true
+IS_GIT=true
 GIT_ID="esm-yoshioka"
 GIT_MAIL="mail address"
 GIT_PASS="personal access tokens"
 GIT_DIR="git"
-IS_EMACS=false
+IS_EMACS=true
 EMACSVER="28-nativecomp"
-IS_DOCKER=false
+IS_DOCKER=true
 DOCKER_USER="*****"
 ## DOCKER_COMPOSEVER="v2.10.0"
 DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-IS_JDK11=false
-IS_NODEJS=false
+IS_JDK11=true
+IS_NODEJS=true
 NVMVER="v0.39.1"
 NODEJSVER="12"
-IS_YARN=false
-IS_FCESS=false
+IS_YARN=true
+IS_FCESS=true
 
 #=================================================
 #   Run check
