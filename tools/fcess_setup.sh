@@ -27,4 +27,22 @@ git clone https://github.com/esminc/fcess-backend.git
 git clone https://github.com/esminc/fcess-manual.git
 git clone https://github.com/esminc/fcess-manifest.git
 
+# setup manifest
+cd fcess-manifest
+./docker/create-image
+cd ..
+
+# setup frontend
+cd fcess-frontend/apispec
+npm i
+cd ..
+yarn
+cd ..
+
+# setup backend
+cd fcess-backend/apispec
+npm i
+cd ..
+./localdb start
+
 cd ~
