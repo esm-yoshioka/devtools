@@ -1,8 +1,4 @@
 #!/bin/bash
-#
-#   F.CESS setup shell
-#     Author :esm-yoshioka
-#
 
 cd ~
 #=================================================
