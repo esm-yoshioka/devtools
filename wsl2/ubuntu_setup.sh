@@ -1,4 +1,4 @@
-#!/bin/bash
+/mnt/c/Windows/SysWOW64/explorer.exe#!/bin/bash
 #
 #   Ubuntu auto-setup shell
 #
@@ -97,6 +97,7 @@ if "$IS_SETUP" ; then
     fi
     echo 'alias lla='\''ls -alF'\' >> $BASHFILE
     echo 'alias ll='\''ls -lF'\' >> $BASHFILE
+    echo 'alias winopen='\''/mnt/c/Windows/SysWOW64/explorer.exe'\' >> $BASHFILE
 
     # japanese environment
     sudo apt install -y language-pack-ja
