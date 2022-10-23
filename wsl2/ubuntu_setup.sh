@@ -128,6 +128,7 @@ if "$IS_GIT" ; then
     git config --global user.name $GIT_ID
     git config --global user.email $GIT_MAIL
     git config --global core.editor vim
+    git config --global pull.rebase true
 
     NETFILE=".netrc"
     [ ! -e $NETFILE ] && touch $NETFILE
