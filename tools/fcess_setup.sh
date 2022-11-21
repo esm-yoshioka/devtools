@@ -26,6 +26,7 @@ git clone https://github.com/esminc/fcess-frontend.git
 git clone https://github.com/esminc/fcess-backend.git
 git clone https://github.com/esminc/fcess-manual.git
 git clone https://github.com/esminc/fcess-manifest.git
+git clone https://github.com/esminc/fcess-prjs.git
 
 # setup manifest
 cd fcess-manifest
