@@ -31,5 +31,9 @@ cd ../fcess-manifest
 echo '===== manifest ====='
 git status
 
+cd ../fcess-prjs
+echo '===== prjs ====='
+git status
+
 cd ~/$GIT_HOME
 

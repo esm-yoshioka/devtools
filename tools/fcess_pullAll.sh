@@ -31,5 +31,9 @@ cd ../fcess-manifest
 echo '===== manifest ====='
 git pull
 
+cd ../fcess-prjs
+echo '===== prjs ====='
+git pull
+
 cd ~/$GIT_HOME
 
