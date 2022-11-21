@@ -47,3 +47,7 @@ cd ..
 ./localdb start
 
 cd ~
+
+# add needed tools
+sudo apt install -y jq postgresql-client-14
+
