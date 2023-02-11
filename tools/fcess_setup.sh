@@ -49,5 +49,5 @@ cd ..
 cd ~
 
 # add needed tools
-sudo apt install -y jq postgresql-client-14
+sudo apt install -y jq postgresql-client
 
