@@ -15,19 +15,20 @@ IS_WSL2=true
 IS_GIT=true
 GIT_ID="esm-yoshioka"
 GIT_MAIL="mail address"
-GIT_PASS="personal access tokens"
 GIT_DIR="git"
+IS_GITNETRC=false
+GIT_PASS="personal access tokens"
 IS_EMACS=true
 EMACSVER="28-nativecomp"
 IS_DOCKER=true
-DOCKER_USER="*****"
+DOCKER_USER="******"
 ## DOCKER_COMPOSEVER="v2.16.0"
 DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 IS_JDK11=true
 IS_NODEJS=true
 NVMVER="v0.39.3"
-NODEJSVER="12"
+NODEJSVER="18"
 IS_YARN=true
 
 #=================================================
@@ -47,8 +48,10 @@ if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
     echo '     git mail = ' $GIT_MAIL
-    echo '     git pass = ' $GIT_PASS
     echo '     git dir = ' $GIT_DIR
+    if "$IS_GITNETRC"; then
+        echo '     git pass = ' $GIT_PASS
+    fi
 fi
 if "$IS_EMACS" ; then
     echo ''
@@ -130,11 +133,13 @@ if "$IS_GIT" ; then
     git config --global core.editor vim
     git config --global pull.rebase true
 
-    NETFILE=".netrc"
-    [ ! -e $NETFILE ] && touch $NETFILE
-    echo 'machine        github.com' >> $NETFILE
-    echo 'login          '$GIT_ID >> $NETFILE
-    echo 'password       '$GIT_PASS >> $NETFILE
+    if "$IS_GITNETRC"; then
+        NETFILE=".netrc"
+        [ ! -e $NETFILE ] && touch $NETFILE
+        echo 'machine        github.com' >> $NETFILE
+        echo 'login          '$GIT_ID >> $NETFILE
+        echo 'password       '$GIT_PASS >> $NETFILE
+    fi
 
     mkdir $GIT_DIR
 fi
