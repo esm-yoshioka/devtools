@@ -22,7 +22,7 @@ IS_EMACS=true
 EMACSVER="28-nativecomp"
 IS_DOCKER=true
 DOCKER_USER="******"
-## DOCKER_COMPOSEVER="v2.16.0"
+## DOCKER_COMPOSEVER="v2.17.2"
 DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 IS_JDK11=true
@@ -115,6 +115,9 @@ if "$IS_SETUP" ; then
 	[ ! -e $WSLFILE ] && sudo touch $WSLFILE
 	sudo sh -c "echo '[interop]' >> $WSLFILE"
 	sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
+	# use systemd
+	sudo sh -c "echo '[boot]' >> $WSLFILE"
+	sudo sh -c "echo 'systemd = true' >> $WSLFILE"
     fi
 fi
 
