@@ -191,15 +191,6 @@ if "$IS_DOCKER" ; then
 
     sudo usermod -aG docker $DOCKER_USER
 
-    if "$IS_WSL2" ; then
-	# start docker service at startup
-	sudo sh -c "echo 'none none rc defaults 0 0' >> /etc/fstab"
-	sudo sh -c "echo '#!/bin/bash' > /sbin/mount.rc"
-	sudo chmod +x /sbin/mount.rc
-	sudo sh -c "echo 'service docker start' >> /sbin/mount.rc"
-	sudo sh -c "echo 'mkdir -p /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd' >> /sbin/mount.rc"
-    fi
-
     # docker-compoes
     if [ ${DOCKER_COMPOSEVER:0:2} = "1." ]; then
 	sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
