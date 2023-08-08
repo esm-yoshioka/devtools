@@ -115,9 +115,6 @@ if "$IS_SETUP" ; then
 	[ ! -e $WSLFILE ] && sudo touch $WSLFILE
 	sudo sh -c "echo '[interop]' >> $WSLFILE"
 	sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
-	# use systemd
-	sudo sh -c "echo '[boot]' >> $WSLFILE"
-	sudo sh -c "echo 'systemd = true' >> $WSLFILE"
     fi
 fi
 
