@@ -236,6 +236,10 @@ if "$IS_YARN" ; then
     echo '===== Yarn install ====='
 
     npm install -g yarn
+
+    # update yarn
+    corepack enable
+    corepack prepare yarn@stable --activate
 fi
 
 #=================================================
