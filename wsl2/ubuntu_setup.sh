@@ -1,4 +1,4 @@
-/mnt/c/Windows/SysWOW64/explorer.exe#!/bin/bash
+#!/bin/bash
 #
 #   Ubuntu auto-setup shell
 #
@@ -18,7 +18,7 @@ GIT_MAIL="mail address"
 GIT_DIR="git"
 IS_GITNETRC=false
 GIT_PASS="personal access tokens"
-IS_EMACS=true
+IS_EMACS=false
 EMACSVER="28-nativecomp"
 IS_DOCKER=true
 DOCKER_USER="******"
