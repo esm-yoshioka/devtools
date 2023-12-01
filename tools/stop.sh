@@ -2,9 +2,9 @@
 
 echo ===== superset =====
 cd ~/git/superset
-TAG=3.0.0rc2 docker-compose -f docker-compose-fcess.yml down
+TAG=3.0.2 docker-compose -f docker-compose-non-dev.yml down
 
-echo ===== thcu-tachikawa =====
-cd ~/git/fcess-prjs/thcu-tachikawa-training
+echo ===== standard =====
+cd ~/git/fcess-prjs/trial
 ./fcess-backend/localdb stop
 

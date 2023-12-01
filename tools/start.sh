@@ -2,10 +2,10 @@
 
 echo ===== superset =====
 cd ~/git/superset
-TAG=3.0.0rc2 docker-compose -f docker-compose-fcess.yml up -d
+TAG=3.0.2 docker-compose -f docker-compose-non-dev.yml up -d
 
-echo ===== thcu-tachikawa =====
-cd ~/git/fcess-prjs/thcu-tachikawa-training
+echo ===== standard =====
+cd ~/git/fcess-prjs/trial
 ./fcess-backend/localdb start
 MANIFEST_PATH=dist/application-manifest.yml java -jar dist/webapp.jar
 
