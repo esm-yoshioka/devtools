@@ -12,7 +12,7 @@ cd ~
 #=================================================
 IS_SETUP=true
 IS_WSL2=true
-IS_GIT=true
+IS_GIT=false
 GIT_ID="esm-yoshioka"
 GIT_MAIL="mail address"
 GIT_DIR="git"
@@ -20,30 +20,32 @@ IS_GITNETRC=false
 GIT_PASS="personal access tokens"
 IS_EMACS=false
 EMACSVER="28-nativecomp"
-IS_DOCKER=true
+IS_DOCKER=false
 DOCKER_USER="******"
-## DOCKER_COMPOSEVER="v2.23.1"
-DOCKER_COMPOSEVER="1.29.2"
+IS_COMPOSE=false
+DOCKER_COMPOSEVER="v2.24.6"
+## DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-IS_JDK11=true
-IS_NODEJS=true
+IS_JDK11=false
+IS_NODEJS=false
 NVMVER="v0.39.5"
 NODEJSVER="18"
-IS_YARN=true
+IS_YARN=false
 
 #=================================================
 #   Run check
 #=================================================
 echo '#-------------------------------------'
 echo '  Install'
-echo '   setup  =' $IS_SETUP
-echo '   wsl2   =' $IS_WSL2
-echo '   git    =' $IS_GIT
-echo '   emacs  =' $IS_EMACS
-echo '   docker =' $IS_DOCKER
-echo '   jdk11  =' $IS_JDK11
-echo '   nodejs =' $IS_NODEJS
-echo '   yarn   =' $IS_YARN
+echo '   setup   =' $IS_SETUP
+echo '   wsl2    =' $IS_WSL2
+echo '   git     =' $IS_GIT
+echo '   emacs   =' $IS_EMACS
+echo '   docker  =' $IS_DOCKER
+echo '   compose =' $IS_COMPOSE
+echo '   jdk11   =' $IS_JDK11
+echo '   nodejs  =' $IS_NODEJS
+echo '   yarn    =' $IS_YARN
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -60,8 +62,10 @@ fi
 if "$IS_DOCKER" ; then
     echo ''
     echo '     docker run user = ' $DOCKER_USER
-    echo '     docker-compose version = ' $DOCKER_COMPOSEVER
-    echo '     docker config directory = ' $DOCKER_CONFIG
+    if "$IS_COMPOSE" ; then
+        echo '     docker-compose version = ' $DOCKER_COMPOSEVER
+        echo '     docker config directory = ' $DOCKER_CONFIG
+    fi
 fi
 if "$IS_NODEJS" ; then
     echo ''
@@ -192,15 +196,17 @@ if "$IS_DOCKER" ; then
     sudo usermod -aG docker $DOCKER_USER
 
     # docker-compoes
-    if [ ${DOCKER_COMPOSEVER:0:2} = "1." ]; then
-	sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-	sudo chmod +x /usr/local/bin/docker-compose
-    elif [ ${DOCKER_COMPOSEVER:0:2} = "v2" ]; then
-	mkdir -p $DOCKER_CONFIG/cli-plugins
-	curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-	chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
-    else
-	echo '!!!!!   Invalid docker-compose version  !!!!!'
+    if "$IS_COMPOSE" ; then
+        if [ ${DOCKER_COMPOSEVER:0:2} = "1." ]; then
+	    sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+	    sudo chmod +x /usr/local/bin/docker-compose
+        elif [ ${DOCKER_COMPOSEVER:0:2} = "v2" ]; then
+	    mkdir -p $DOCKER_CONFIG/cli-plugins
+	    curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+	    chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+        else
+	    echo '!!!!!   Invalid docker-compose version  !!!!!'
+        fi
     fi
 fi
 
