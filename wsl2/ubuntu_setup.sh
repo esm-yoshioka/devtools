@@ -19,7 +19,6 @@ GIT_DIR="git"
 IS_GITNETRC=false
 GIT_PASS="personal access tokens"
 IS_EMACS=false
-EMACSVER="28-nativecomp"
 IS_DOCKER=false
 DOCKER_USER="******"
 IS_COMPOSE=false
@@ -54,10 +53,6 @@ if "$IS_GIT" ; then
     if "$IS_GITNETRC"; then
         echo '     git pass = ' $GIT_PASS
     fi
-fi
-if "$IS_EMACS" ; then
-    echo ''
-    echo '     emacs version = ' $EMACSVER
 fi
 if "$IS_DOCKER" ; then
     echo ''
@@ -156,13 +151,9 @@ if "$IS_EMACS" ; then
     sudo apt remove -y emacs
     sudo apt -yV autoremove
     sudo apt autoclean
+    sudo snap install emacs --classic
 
-    sudo add-apt-repository -y ppa:kelleyk/emacs
-    sudo apt update
-    sudo apt -yV upgrade
-    sudo apt install -y emacs$EMACSVER
-
-    mkdir .emacs.d
+    [ ! -d .emacs.d ] && mkdir .emacs.d
     cd .emacs.d
     touch init.el
 
