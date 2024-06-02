@@ -152,7 +152,6 @@ if "$IS_EMACS" ; then
     sudo apt -yV autoremove
     sudo apt autoclean
     sudo snap install emacs --classic
-    sudo apt install emacs-mozc-bin
 
     [ ! -d .emacs.d ] && mkdir .emacs.d
     cd .emacs.d
