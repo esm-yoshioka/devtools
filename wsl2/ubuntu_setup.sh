@@ -21,8 +21,8 @@ GIT_PASS="personal access tokens"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="******"
-IS_COMPOSE=false
-DOCKER_COMPOSEVER="v2.24.6"
+IS_COMPOSE_MANUAL=false
+DOCKER_COMPOSEVER="v2.27.1"
 ## DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 IS_JDK11=false
@@ -41,7 +41,7 @@ echo '   wsl2    =' $IS_WSL2
 echo '   git     =' $IS_GIT
 echo '   emacs   =' $IS_EMACS
 echo '   docker  =' $IS_DOCKER
-echo '   compose =' $IS_COMPOSE
+echo '   compose =' $IS_COMPOSE_MANUAL
 echo '   jdk11   =' $IS_JDK11
 echo '   nodejs  =' $IS_NODEJS
 echo '   yarn    =' $IS_YARN
@@ -57,7 +57,7 @@ fi
 if "$IS_DOCKER" ; then
     echo ''
     echo '     docker run user = ' $DOCKER_USER
-    if "$IS_COMPOSE" ; then
+    if "$IS_COMPOSE_MANUAL" ; then
         echo '     docker-compose version = ' $DOCKER_COMPOSEVER
         echo '     docker config directory = ' $DOCKER_CONFIG
     fi
@@ -188,7 +188,7 @@ if "$IS_DOCKER" ; then
     sudo usermod -aG docker $DOCKER_USER
 
     # docker-compoes
-    if "$IS_COMPOSE" ; then
+    if "$IS_COMPOSE_MANUAL" ; then
         if [ ${DOCKER_COMPOSEVER:0:2} = "1." ]; then
 	    sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 	    sudo chmod +x /usr/local/bin/docker-compose
