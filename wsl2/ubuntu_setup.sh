@@ -156,8 +156,6 @@ if "$IS_EMACS" ; then
 
     [ ! -d .emacs.d ] && mkdir .emacs.d
     [ ! -d .config ] && mkdir .config
-
-    cd ~
 fi
 
 #=================================================
@@ -243,7 +241,15 @@ fi
 #=================================================
 #   Other
 #=================================================
+# working directory
 mkdir work
+
+# open chrome (host)
+CHROMEFILE="/bin/google-chrome"
+[ ! -e $WSLFILE ] && sudo touch $CHROMEFILE
+sudo sh -c "echo '#! /bin/sh' >> $CHROMEFILE"
+sudo sh -c "echo 'exec /mnt/c/Program\ Files/Google/Chrome/Application/chrome.exe "$@"' >> $CHROMEFILE"
+sudo chmod +x $CHROMEFILE
 
 #=================================================
 #   End
