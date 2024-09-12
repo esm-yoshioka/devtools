@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 #   F.CESS setup shell
+#
 #     Author :esm-yoshioka
 #
 
@@ -9,6 +10,44 @@ cd ~
 #   Parameter
 #=================================================
 GIT_HOME="git"
+IS_JDK11=false
+IS_NODEJS=false
+NVMVER="v0.40.1"
+NODEJSVER="18"
+IS_YARN=false
+
+#=================================================
+#   OpenJDK11
+#=================================================
+echo '===== OpenJDK11 install ====='
+    
+sudo apt update
+sudo apt -yV upgrade
+sudo apt install -y openjdk-11-jdk
+
+#=================================================
+#   NVM, nodejs
+#=================================================
+echo '===== nvm, nodejs install ====='
+
+# nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
+. ~/.nvm/nvm.sh
+
+# nodejs
+nvm install $NODEJSVER
+
+#=================================================
+#   Yarn
+#=================================================
+echo '===== Yarn install ====='
+
+npm install -g yarn
+
+# update yarn
+corepack enable
+##  yarn set version 3.6.1
+corepack prepare yarn@stable --activate
 
 #=================================================
 #   F.CESS
@@ -50,4 +89,3 @@ cd ~
 
 # add needed tools
 sudo apt install -y jq postgresql-client
-
