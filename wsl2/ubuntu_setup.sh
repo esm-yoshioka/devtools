@@ -3,7 +3,7 @@
 #   Ubuntu auto-setup shell
 #
 #     Author :esm-yoshioka
-#     Target :ubuntu 22.04
+#     Target :ubuntu 24.04
 #
 
 cd ~
@@ -22,14 +22,9 @@ IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="******"
 IS_COMPOSE_MANUAL=false
-DOCKER_COMPOSEVER="v2.27.1"
-## DOCKER_COMPOSEVER="1.29.2"
+## DOCKER_COMPOSEVER="v2.29.2"
+DOCKER_COMPOSEVER="1.29.2"
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-IS_JDK11=false
-IS_NODEJS=false
-NVMVER="v0.39.7"
-NODEJSVER="18"
-IS_YARN=false
 
 #=================================================
 #   Run check
@@ -42,9 +37,6 @@ echo '   git     =' $IS_GIT
 echo '   emacs   =' $IS_EMACS
 echo '   docker  =' $IS_DOCKER
 echo '   compose =' $IS_COMPOSE_MANUAL
-echo '   jdk11   =' $IS_JDK11
-echo '   nodejs  =' $IS_NODEJS
-echo '   yarn    =' $IS_YARN
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
@@ -62,18 +54,13 @@ if "$IS_DOCKER" ; then
         echo '     docker config directory = ' $DOCKER_CONFIG
     fi
 fi
-if "$IS_NODEJS" ; then
-    echo ''
-    echo '     nvm version    = ' $NVMVER
-    echo '     nodejs version = ' $NODEJSVER
-fi
 echo '#-------------------------------------'
 
 while true ; do
     read -p "Continue Setup?[y/N]" ans
     case $ans in
-	[yY])break;;
-	*)exit;;
+        [yY])break;;
+        *)exit;;
     esac
 done
 
@@ -84,7 +71,7 @@ if "$IS_SETUP" ; then
     echo '===== setup ubuntu environment ====='
 
     # change repository to japan
-    sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
+    ## sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
 
     # packages update
     sudo apt -y update
@@ -94,12 +81,12 @@ if "$IS_SETUP" ; then
     BASHFILE=".bash_aliases"
 
     if [ ! -e $BASHFILE ];then
-	touch $BASHFILE
-	echo '#User Alias setting' > $BASHFILE
+        touch $BASHFILE
+        echo '#User Alias setting' > $BASHFILE
     fi
     echo 'alias lla='\''ls -alF'\' >> $BASHFILE
     echo 'alias ll='\''ls -lF'\' >> $BASHFILE
-    echo 'alias winopen='\''/mnt/c/Windows/SysWOW64/explorer.exe'\' >> $BASHFILE
+    echo 'alias winopen='\''/mnt/c/Windows/SysWOW64/explorer.exe .'\' >> $BASHFILE
 
     # japanese environment
     sudo apt install -y language-pack-ja
@@ -108,12 +95,11 @@ if "$IS_SETUP" ; then
     sudo update-locale LANG=ja_JP.UTF-8
 
     if "$IS_WSL2" ; then
-	# environment variable
-	WSLFILE="/etc/wsl.conf"
-	
-	[ ! -e $WSLFILE ] && sudo touch $WSLFILE
-	sudo sh -c "echo '[interop]' >> $WSLFILE"
-	sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
+        # environment variable
+        WSLFILE="/etc/wsl.conf"
+        [ ! -e $WSLFILE ] && sudo touch $WSLFILE
+        sudo sh -c "echo '[interop]' >> $WSLFILE"
+        sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
     fi
 fi
 
@@ -173,7 +159,7 @@ if "$IS_DOCKER" ; then
     # docker
     sudo apt update
     sudo apt -yV upgrade
-    sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+    sudo apt install -y ca-certificates curl
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     echo \
 	"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
@@ -187,69 +173,17 @@ if "$IS_DOCKER" ; then
     # docker-compoes
     if "$IS_COMPOSE_MANUAL" ; then
         if [ ${DOCKER_COMPOSEVER:0:2} = "1." ]; then
-	    sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-	    sudo chmod +x /usr/local/bin/docker-compose
+            sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
         elif [ ${DOCKER_COMPOSEVER:0:2} = "v2" ]; then
-	    mkdir -p $DOCKER_CONFIG/cli-plugins
-	    curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-	    chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+            mkdir -p $DOCKER_CONFIG/cli-plugins
+            curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+            chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
         else
-	    echo '!!!!!   Invalid docker-compose version  !!!!!'
+            echo '!!!!!   Invalid docker-compose version  !!!!!'
         fi
     fi
 fi
-
-#=================================================
-#   OpenJDK11
-#=================================================
-if "$IS_JDK11" ; then
-    echo '===== OpenJDK11 install ====='
-    
-    sudo apt update
-    sudo apt -yV upgrade
-    sudo apt install -y openjdk-11-jdk
-fi
-
-#=================================================
-#   NVM, nodejs
-#=================================================
-if "$IS_NODEJS" ; then
-    echo '===== nvm, nodejs install ====='
-
-    # nvm
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
-    . ~/.nvm/nvm.sh
-
-    # nodejs
-    nvm install $NODEJSVER
-fi
-
-#=================================================
-#   Yarn
-#=================================================
-if "$IS_YARN" ; then
-    echo '===== Yarn install ====='
-
-    npm install -g yarn
-
-    # update yarn
-    corepack enable
-    corepack prepare yarn@stable --activate
-fi
-
-#=================================================
-#=================================================
-#   Other
-#=================================================
-# working directory
-mkdir work
-
-# open chrome (host)
-CHROMEFILE="/bin/google-chrome"
-[ ! -e $WSLFILE ] && sudo touch $CHROMEFILE
-sudo sh -c "echo '#! /bin/sh' >> $CHROMEFILE"
-sudo sh -c "echo 'exec /mnt/c/Program\ Files/Google/Chrome/Application/chrome.exe \"\$@\"' >> $CHROMEFILE"
-sudo chmod +x $CHROMEFILE
 
 #=================================================
 #   End
