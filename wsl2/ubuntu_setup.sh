@@ -150,12 +150,6 @@ fi
 if "$IS_DOCKER" ; then
     echo '===== docker, docker-compose install ====='
 
-    # setting for iptables
-    echo '**********************************************************'
-    echo '***  for Ubuntu22.04 or later, select iptables-legacy  ***'
-    echo '**********************************************************'
-    sudo update-alternatives --config iptables
-
     # docker
     sudo apt update
     sudo apt -yV upgrade
@@ -169,6 +163,12 @@ if "$IS_DOCKER" ; then
     sudo apt install -y docker-ce docker-ce-cli containerd.io
 
     sudo usermod -aG docker $DOCKER_USER
+
+    # setting for iptables
+    echo '**********************************************************'
+    echo '***  for Ubuntu22.04 or later, select iptables-legacy  ***'
+    echo '**********************************************************'
+    sudo update-alternatives --config iptables
 
     # docker-compoes
     if "$IS_COMPOSE_MANUAL" ; then
