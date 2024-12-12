@@ -1,0 +1,6 @@
+((sql-mode . (
+           (eval . (sql-set-product "postgres"))
+           (sql-user . "cess_user")
+           (sql-database . "cess")
+           (sql-server   . "localhost")
+	      )))
