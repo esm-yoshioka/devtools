@@ -59,9 +59,9 @@ USERLIST=$1
 #-----------------------------------------------------------
 # User option
 
-HOMEDIR="/home/ubuntu/"
-WORKDIR="vpn_ikev2/thcu-tachikawa/certs_2024_teacher/"
-VPNPREFIX=thcu_tachikawa_
+HOMEDIR="/home/ubuntu/vpnserver/"
+WORKDIR="user/dir/"
+VPNPREFIX=prefix_
 #===========================================================
 
 # CHECK USERLIST

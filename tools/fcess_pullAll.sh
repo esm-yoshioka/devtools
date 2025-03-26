@@ -36,4 +36,3 @@ echo '===== prjs ====='
 git pull
 
 cd ~/$GIT_HOME
-

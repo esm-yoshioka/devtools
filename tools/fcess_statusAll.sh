@@ -36,4 +36,3 @@ echo '===== prjs ====='
 git status
 
 cd ~/$GIT_HOME
-
