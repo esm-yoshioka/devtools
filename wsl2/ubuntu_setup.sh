@@ -138,7 +138,7 @@ if "$IS_EMACS" ; then
     sudo apt -yV autoremove
     sudo apt autoclean
     sudo snap install emacs --classic
-    sudo apt install -y emacs-mozc-bin cmigemo ripgrep
+    sudo apt install -y emacs-mozc-bin cmigemo ripgrep libtool-bin cmake
 
     [ ! -d .emacs.d ] && mkdir .emacs.d
     [ ! -d .config ] && mkdir .config
