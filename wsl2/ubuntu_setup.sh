@@ -84,9 +84,17 @@ if "$IS_SETUP" ; then
         touch $BASHFILE
         echo '#User Alias setting' > $BASHFILE
     fi
-    echo 'alias lla='\''ls -alF'\' >> $BASHFILE
-    echo 'alias ll='\''ls -lF'\' >> $BASHFILE
-    echo 'alias winopen='\''/mnt/c/Windows/SysWOW64/explorer.exe .'\' >> $BASHFILE
+cat <<'EOF' >> $BASHFILE
+    alias lla='ls -alF'
+    alias ll='ls -lF'
+    winopen() {
+        if [ -z "$1" ]; then
+            echo "Usage: winopen <path or file>"
+            return 0
+        fi
+        /mnt/c/Windows/SysWOW64/cmd.exe /c start "" "$(wslpath -w "$1")"
+    }
+EOF
 
     # japanese environment
     sudo apt install -y language-pack-ja
