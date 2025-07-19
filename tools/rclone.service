@@ -1,0 +1,17 @@
+[Unit]
+Description=Mount Google Drive using rclone
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rclone mount gdrive:002_利用ユーザ /home/manager/cess/user \
+    --config=/home/manager/.config/rclone/rclone.conf \
+    --vfs-cache-mode full
+ExecStop=/usr/bin/fusermount -u /home/manager/cess/user
+Restart=always
+User=manager
+Environment=PATH=/usr/bin:/bin
+
+[Install]
+WantedBy=default.target
