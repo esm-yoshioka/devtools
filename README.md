@@ -1,7 +1,7 @@
 # devtools
 開発環境とかツールとか覚書とか
 
-## WSL2 memo
+## WSL2
 - WSL2でのOSインストール
   - インストール可能なディストリビューションの確認  
   `wsl -l -o`
@@ -26,3 +26,18 @@
 - .wslconfig
   - WSL2全体の設定を定義。%USERPROFILE%配下に格納  
   標準だとUSERPROFILEはC:\Users\[ユーザ名]
+
+## rclone
+
+Googleドライブをローカルにマウント
+
+``` shell
+sudo apt install unzip
+curl https://rclone.org/install.sh | sudo bash
+rclone config
+cp rclone.service /etc/systemd/system/
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl start rclone.service
+sudo systemctl enable rclone.service
+```
