@@ -21,10 +21,6 @@ GIT_PASS="personal access tokens"
 IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="******"
-IS_COMPOSE_MANUAL=false
-## DOCKER_COMPOSEVER="v2.29.2"
-DOCKER_COMPOSEVER="1.29.2"
-DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 
 #=================================================
 #   Run check
@@ -49,10 +45,6 @@ fi
 if "$IS_DOCKER" ; then
     echo ''
     echo '     docker run user = ' $DOCKER_USER
-    if "$IS_COMPOSE_MANUAL" ; then
-        echo '     docker-compose version = ' $DOCKER_COMPOSEVER
-        echo '     docker config directory = ' $DOCKER_CONFIG
-    fi
 fi
 echo '#-------------------------------------'
 
@@ -177,20 +169,6 @@ if "$IS_DOCKER" ; then
     echo '***  for Ubuntu22.04 or later, select iptables-legacy  ***'
     echo '**********************************************************'
     sudo update-alternatives --config iptables
-
-    # docker-compoes
-    if "$IS_COMPOSE_MANUAL" ; then
-        if [ ${DOCKER_COMPOSEVER:0:2} = "1." ]; then
-            sudo curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-        elif [ ${DOCKER_COMPOSEVER:0:2} = "v2" ]; then
-            mkdir -p $DOCKER_CONFIG/cli-plugins
-            curl -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSEVER/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-            chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
-        else
-            echo '!!!!!   Invalid docker-compose version  !!!!!'
-        fi
-    fi
 fi
 
 #=================================================
