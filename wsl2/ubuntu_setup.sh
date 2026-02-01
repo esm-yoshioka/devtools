@@ -32,7 +32,6 @@ echo '   wsl2    =' $IS_WSL2
 echo '   git     =' $IS_GIT
 echo '   emacs   =' $IS_EMACS
 echo '   docker  =' $IS_DOCKER
-echo '   compose =' $IS_COMPOSE_MANUAL
 if "$IS_GIT" ; then
     echo ''
     echo '     git id = ' $GIT_ID
