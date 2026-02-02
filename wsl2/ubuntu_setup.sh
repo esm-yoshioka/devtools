@@ -12,15 +12,18 @@ cd ~
 #=================================================
 IS_SETUP=true
 IS_WSL2=true
+
 IS_GIT=false
 GIT_ID="esm-yoshioka"
-GIT_MAIL="mail address"
+GIT_MAIL="Mail Address"
 GIT_DIR="git"
 IS_GITNETRC=false
-GIT_PASS="personal access tokens"
+GIT_PASS="Personal Access Tokens"
+
 IS_EMACS=false
+
 IS_DOCKER=false
-DOCKER_USER="******"
+DOCKER_USER="User Name"
 
 #=================================================
 #   Run check
@@ -30,19 +33,17 @@ echo '  Install'
 echo '   setup   =' $IS_SETUP
 echo '   wsl2    =' $IS_WSL2
 echo '   git     =' $IS_GIT
-echo '   emacs   =' $IS_EMACS
-echo '   docker  =' $IS_DOCKER
 if "$IS_GIT" ; then
-    echo ''
-    echo '     git id = ' $GIT_ID
+    echo '     git id   = ' $GIT_ID
     echo '     git mail = ' $GIT_MAIL
-    echo '     git dir = ' $GIT_DIR
+    echo '     git dir  = ' $GIT_DIR
     if "$IS_GITNETRC"; then
         echo '     git pass = ' $GIT_PASS
     fi
 fi
+echo '   emacs   =' $IS_EMACS
+echo '   docker  =' $IS_DOCKER
 if "$IS_DOCKER" ; then
-    echo ''
     echo '     docker run user = ' $DOCKER_USER
 fi
 echo '#-------------------------------------'
@@ -59,7 +60,9 @@ done
 #   Setup Ubuntu
 #=================================================
 if "$IS_SETUP" ; then
+    echo ''
     echo '===== setup ubuntu environment ====='
+    echo ''
 
     # change repository to japan
     ## sudo sed -i.bak 's/\/\/archive.ubuntu.com/\/\/jp.archive.ubuntu.com/g' /etc/apt/sources.list
@@ -88,8 +91,7 @@ cat <<'EOF' >> $BASHFILE
 EOF
 
     # japanese environment
-    sudo apt install -y language-pack-ja
-    sudo apt install -y manpages-ja manpages-ja-dev
+    sudo apt install -y language-pack-ja manpages-ja manpages-ja-dev
 
     sudo update-locale LANG=ja_JP.UTF-8
 
@@ -106,7 +108,9 @@ fi
 #   Git
 #=================================================
 if "$IS_GIT" ; then
+    echo ''
     echo '===== git install ====='
+    echo ''
 
     sudo add-apt-repository -y ppa:git-core/ppa
     sudo apt update
@@ -132,7 +136,10 @@ fi
 #   Emacs
 #=================================================
 if "$IS_EMACS" ; then
+    echo ''
     echo '===== emacs install ====='
+    echo ''
+
     sudo apt remove -y emacs
     sudo apt -yV autoremove
     sudo apt autoclean
@@ -147,7 +154,9 @@ fi
 #   Docker, Docker-compose
 #=================================================
 if "$IS_DOCKER" ; then
+    echo ''
     echo '===== docker, docker-compose install ====='
+    echo ''
 
     # docker
     sudo apt update
@@ -176,6 +185,10 @@ fi
 sudo apt -yV autoremove
 sudo apt autoclean
 
+[ ! -d work ] && mkdir work
+
+echo ''
 echo '===== When the installation is completed, restart the WSL2. ====='
+echo ''
 
 exec $SHELL --login
