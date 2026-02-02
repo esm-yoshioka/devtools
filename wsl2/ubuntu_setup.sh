@@ -25,6 +25,10 @@ IS_EMACS=false
 IS_DOCKER=false
 DOCKER_USER="User Name"
 
+IS_NODE=false
+NVMVER="v0.40.4"
+NODEVER="--lts"
+
 #=================================================
 #   Run check
 #=================================================
@@ -32,6 +36,7 @@ echo '#-------------------------------------'
 echo '  Install'
 echo '   setup   =' $IS_SETUP
 echo '   wsl2    =' $IS_WSL2
+
 echo '   git     =' $IS_GIT
 if "$IS_GIT" ; then
     echo '     git id   = ' $GIT_ID
@@ -41,11 +46,20 @@ if "$IS_GIT" ; then
         echo '     git pass = ' $GIT_PASS
     fi
 fi
+
 echo '   emacs   =' $IS_EMACS
+
 echo '   docker  =' $IS_DOCKER
 if "$IS_DOCKER" ; then
     echo '     docker run user = ' $DOCKER_USER
 fi
+
+echo '   node    =' $IS_NODE
+if "$IS_NODE" ; then
+    echo '     nvm version     = ' $NVMVER
+    echo '     Node.js version = ' $NODEVER
+fi
+
 echo '#-------------------------------------'
 
 while true ; do
@@ -177,6 +191,23 @@ if "$IS_DOCKER" ; then
     echo '***  for Ubuntu22.04 or later, select iptables-legacy  ***'
     echo '**********************************************************'
     sudo update-alternatives --config iptables
+fi
+
+#=================================================
+#   Node
+#=================================================
+if "$IS_NODE" ; then
+    echo ''
+    echo '===== nvm, Node.js install ====='
+    echo ''
+
+    # nvm
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$NVMVER/install.sh | bash
+    . ~/.nvm/nvm.sh
+
+    # nodejs
+    nvm install $NODEVER
+    nvm use $NODEVER
 fi
 
 #=================================================
