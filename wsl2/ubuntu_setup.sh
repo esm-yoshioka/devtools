@@ -13,6 +13,8 @@ cd ~
 IS_SETUP=true
 IS_WSL2=true
 
+IS_COMMON=false
+
 IS_GIT=false
 GIT_ID="esm-yoshioka"
 GIT_MAIL="Mail Address"
@@ -36,6 +38,7 @@ echo '#-------------------------------------'
 echo '  Install'
 echo '   setup   =' $IS_SETUP
 echo '   wsl2    =' $IS_WSL2
+echo '   common  =' $IS_COMMON
 
 echo '   git     =' $IS_GIT
 if "$IS_GIT" ; then
@@ -116,6 +119,17 @@ EOF
         sudo sh -c "echo '[interop]' >> $WSLFILE"
         sudo sh -c "echo 'appendWindowsPath = false' >> $WSLFILE"
     fi
+fi
+
+#=================================================
+#   Setup Common tools
+#=================================================
+if "$IS_COMMON" ; then
+    # packages update
+    sudo apt -y update
+    sudo apt -yV upgrade
+
+    sudo apt install -y postgresql-client-16
 fi
 
 #=================================================
