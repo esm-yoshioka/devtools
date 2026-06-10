@@ -130,7 +130,7 @@ if "$IS_COMMON" ; then
     sudo apt -y update
     sudo apt -yV upgrade
 
-    sudo apt install -y postgresql-client-16
+    sudo apt install -y postgresql-client-18
 fi
 
 #=================================================
