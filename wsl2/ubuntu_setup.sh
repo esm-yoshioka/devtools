@@ -3,7 +3,7 @@
 #   Ubuntu auto-setup shell
 #
 #     Author :esm-yoshioka
-#     Target :ubuntu 24.04
+#     Target :ubuntu 26.04
 #
 
 cd ~
@@ -28,7 +28,7 @@ IS_DOCKER=false
 DOCKER_USER="User Name"
 
 IS_NODE=false
-NVMVER="v0.40.4"
+NVMVER="v0.40.5"
 NODEVER="--lts"
 
 #=================================================
@@ -39,6 +39,7 @@ echo '  Install'
 echo '   setup   =' $IS_SETUP
 echo '   wsl2    =' $IS_WSL2
 echo '   common  =' $IS_COMMON
+echo '   ---'
 
 echo '   git     =' $IS_GIT
 if "$IS_GIT" ; then
