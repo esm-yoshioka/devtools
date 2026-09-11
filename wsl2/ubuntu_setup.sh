@@ -24,6 +24,8 @@ GIT_DIR="git"
 IS_GITNETRC=false
 GIT_PASS="Personal Access Tokens"
 
+IS_GH=false
+
 IS_EMACS=false
 
 IS_DOCKER=false
@@ -66,6 +68,8 @@ if "$IS_GIT" ; then
         echo '     git pass =  (設定済み)'
     fi
 fi
+
+echo '   gh      =' $IS_GH
 
 echo '   emacs   =' $IS_EMACS
 
@@ -209,6 +213,31 @@ if "$IS_GIT" ; then
     fi
 
     mkdir -p "$GIT_DIR"
+fi
+
+#=================================================
+#   GitHub CLI
+#=================================================
+if "$IS_GH" ; then
+    echo ''
+    echo '===== gh install ====='
+    echo ''
+
+    sudo apt-get update
+    sudo apt-get install -y ca-certificates curl
+
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+        | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+    sudo chmod a+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+
+    sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null <<EOF
+deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main
+EOF
+
+    sudo apt-get update
+    sudo apt-get install -y gh
+
+    echo '  gh の認証は再ログイン後に gh auth login を実行してください'
 fi
 
 #=================================================
