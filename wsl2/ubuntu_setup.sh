@@ -21,8 +21,9 @@ IS_GIT=false
 GIT_ID="esm-yoshioka"
 GIT_MAIL="Mail Address"
 GIT_DIR="git"
-IS_GITNETRC=false
-GIT_PASS="Personal Access Tokens"
+
+IS_SSHKEY=false
+SSH_KEY_NAME="id_ed25519_github"
 
 IS_GH=false
 
@@ -32,22 +33,20 @@ IS_DOCKER=false
 DOCKER_USER="$(id -un)"
 
 IS_NODE=false
-NVMVER="v0.40.7"
+NVMVER="v0.40.8"
 NODEVER="--lts"
 
 #=================================================
 #   Parameter check
 #=================================================
-if "$IS_GIT" ; then
+if "$IS_GIT" || "$IS_SSHKEY" ; then
     case "$GIT_MAIL" in
         ""|*\ *) echo "ERROR: GIT_MAIL を設定してください (現在: '$GIT_MAIL')" >&2; exit 1;;
     esac
-    if "$IS_GITNETRC" ; then
-        case "$GIT_PASS" in
-            ""|*\ *) echo "ERROR: GIT_PASS を設定してください" >&2; exit 1;;
-        esac
-    fi
 fi
+
+# 処理中に見つかった警告。最後にまとめて表示する
+WARNINGS=()
 
 #=================================================
 #   Run check
@@ -64,9 +63,11 @@ if "$IS_GIT" ; then
     echo '     git id   = ' $GIT_ID
     echo '     git mail = ' $GIT_MAIL
     echo '     git dir  = ' $GIT_DIR
-    if "$IS_GITNETRC"; then
-        echo '     git pass =  (設定済み)'
-    fi
+fi
+
+echo '   sshkey  =' $IS_SSHKEY
+if "$IS_SSHKEY" ; then
+    echo '     key file = ' "$HOME/.ssh/$SSH_KEY_NAME"
 fi
 
 echo '   gh      =' $IS_GH
@@ -187,32 +188,100 @@ if "$IS_GIT" ; then
     git config --global core.editor vim
     git config --global pull.rebase true
 
-    if "$IS_GITNETRC"; then
-        NETFILE="$HOME/.netrc"
-
-        # PAT を平文で保持するため、書き込み前に 600 にしておく
-        if [ ! -e "$NETFILE" ]; then
-            touch "$NETFILE"
-        fi
-        chmod 600 "$NETFILE"
-
-        if grep -q '^machine[[:space:]]\+github\.com' "$NETFILE" ; then
-            echo '  .netrc の既存 github.com エントリを書き換えます'
-            ( umask 077
-              awk '/^machine[[:space:]]/ { skip = ($2 == "github.com") } !skip' \
-                  "$NETFILE" > "${NETFILE}.tmp" )
-            mv "${NETFILE}.tmp" "$NETFILE"
-            chmod 600 "$NETFILE"
-        fi
-
-        {
-            echo 'machine        github.com'
-            echo "login          $GIT_ID"
-            echo "password       $GIT_PASS"
-        } >> "$NETFILE"
+    # 旧方式（.netrc に PAT を平文保存）の残りがあれば警告
+    if grep -q '^machine[[:space:]]\+github\.com' "$HOME/.netrc" 2>/dev/null ; then
+        WARNINGS+=("$HOME/.netrc に github.com のエントリ (PAT) が残っています。削除し、GitHub 側でもトークンを Delete してください。")
     fi
 
     mkdir -p "$GIT_DIR"
+fi
+
+#=================================================
+#   SSH key for GitHub (+ keychain)
+#=================================================
+if "$IS_SSHKEY" ; then
+    echo ''
+    echo '===== ssh key / keychain setup ====='
+    echo ''
+
+    sudo apt-get install -y openssh-client keychain curl jq
+
+    SSH_DIR="$HOME/.ssh"
+    SSH_KEY="$SSH_DIR/$SSH_KEY_NAME"
+    mkdir -p "$SSH_DIR"
+    chmod 700 "$SSH_DIR"
+
+    # --- 鍵の作成（パスフレーズは対話入力） ---
+    if [ -e "$SSH_KEY" ]; then
+        echo "  $SSH_KEY は作成済みのためスキップします"
+    else
+        echo '  SSH 鍵を作成します。パスフレーズを必ず設定してください（空にしない）'
+        ssh-keygen -t ed25519 -C "$GIT_MAIL" -f "$SSH_KEY"
+    fi
+    chmod 600 "$SSH_KEY"
+    chmod 644 "$SSH_KEY.pub"
+
+    # パスフレーズなしで読めてしまう場合は警告
+    if ssh-keygen -y -P "" -f "$SSH_KEY" > /dev/null 2>&1 ; then
+        WARNINGS+=("$SSH_KEY にパスフレーズが設定されていません。ssh-keygen -p -f $SSH_KEY で設定してください。")
+    fi
+
+    SSH_CONFIG="$SSH_DIR/config"
+    touch "$SSH_CONFIG"
+    chmod 600 "$SSH_CONFIG"
+
+    if grep -qE '^Host[[:space:]]+github\.com([[:space:]]|$)' "$SSH_CONFIG" ; then
+        echo '  ~/.ssh/config の github.com は設定済みのためスキップします'
+    else
+        cat <<EOF >> "$SSH_CONFIG"
+
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/$SSH_KEY_NAME
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+EOF
+    fi
+
+    # GitHub API から公式のホスト鍵を取得して登録
+    KNOWN_HOSTS="$SSH_DIR/known_hosts"
+    if ssh-keygen -F github.com -f "$KNOWN_HOSTS" > /dev/null 2>&1 ; then
+        echo '  known_hosts の github.com は登録済みのためスキップします'
+    else
+        META_KEYS="$(curl -fsSL --proto '=https' --tlsv1.2 https://api.github.com/meta \
+            | jq -r '.ssh_keys[]' \
+            | grep -E '^(ssh-ed25519|ecdsa-sha2-nistp256|ssh-rsa) [A-Za-z0-9+/=]+$')" \
+            || META_KEYS=""
+
+        if [ -z "$META_KEYS" ]; then
+            echo 'ERROR: GitHub API からホスト鍵を取得できませんでした。' >&2
+            echo '       ネットワーク環境を確認するか、初回の ssh -T git@github.com で' >&2
+            echo '       表示されるフィンガープリントを公式ドキュメントと手動で照合してください。' >&2
+            exit 1
+        fi
+
+        touch "$KNOWN_HOSTS"
+        chmod 644 "$KNOWN_HOSTS"
+        printf '%s\n' "$META_KEYS" | sed 's/^/github.com /' >> "$KNOWN_HOSTS"
+
+        echo '  github.com のホスト鍵（GitHub API より取得）を known_hosts に登録しました:'
+        ssh-keygen -lF github.com -f "$KNOWN_HOSTS" | grep -v '^#' | sed 's/^/      /'
+    fi
+
+    # --- keychain（WSL 起動後の最初のシェルで 1 回だけパスフレーズ入力） ---
+    BASHRC="$HOME/.bashrc"
+    KEYCHAIN_MARK='# SSH agent (keychain)'
+
+    if grep -qF "$KEYCHAIN_MARK" "$BASHRC" 2>/dev/null ; then
+        echo '  .bashrc の keychain は設定済みのためスキップします'
+    else
+        cat <<EOF >> "$BASHRC"
+
+$KEYCHAIN_MARK
+eval "\$(keychain --eval --quiet $SSH_KEY_NAME)"
+EOF
+    fi
 fi
 
 #=================================================
@@ -237,7 +306,7 @@ EOF
     sudo apt-get update
     sudo apt-get install -y gh
 
-    echo '  gh の認証は再ログイン後に gh auth login を実行してください'
+    gh config set git_protocol ssh
 fi
 
 #=================================================
@@ -282,7 +351,6 @@ EOF
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
     sudo usermod -aG docker "$DOCKER_USER"
-    echo '  docker グループの反映には再ログイン (WSL2 の再起動) が必要です'
 fi
 
 #=================================================
@@ -316,15 +384,72 @@ sudo apt-get autoclean
 
 mkdir -p work
 
+STEP=0
+step() {
+    STEP=$((STEP + 1))
+    echo ''
+    echo "  $STEP. $1"
+}
+
 echo ''
 echo '====================================================='
 echo '  Setup completed.'
+echo '====================================================='
+
+if [ "${#WARNINGS[@]}" -gt 0 ]; then
+    echo ''
+    echo '  [警告]'
+    for w in "${WARNINGS[@]}"; do
+        echo "   - $w"
+    done
+fi
+
 echo ''
-echo '  To apply /etc/wsl.conf and the docker group,'
-echo '  restart WSL2. Run this command on Windows:'
+echo '  [この後に行う操作]'
+
+if "$IS_SSHKEY" ; then
+    step '公開鍵を GitHub に登録する（今のうちに実施可）'
+    echo '     GitHub の Settings -> SSH and GPG keys -> New SSH key'
+    echo '     Key type は Authentication Key、Key に以下を貼り付け:'
+    echo ''
+    sed 's/^/       /' "$HOME/.ssh/$SSH_KEY_NAME.pub"
+fi
+
+step 'WSL を再起動する（Windows の PowerShell で実行）'
+echo '       wsl --shutdown'
+echo '     その後、WSL を起動し直す'
+
+if "$IS_SSHKEY" ; then
+    step '最初のターミナルで SSH 鍵のパスフレーズを入力する'
+    echo '     keychain が聞いてくるので入力。以降のターミナルでは聞かれない'
+    if "$IS_EMACS" ; then
+        echo '     Emacs はパスフレーズ入力後に起動する'
+    fi
+
+    step 'GitHub への SSH 接続を確認する'
+    echo '       ssh-add -l'
+    echo '       ssh -T git@github.com'
+    echo '     パスフレーズなしで "Hi <ユーザー名>!" と表示されれば OK'
+fi
+
+if "$IS_GH" ; then
+    step 'gh にログインする'
+    echo '       gh auth login -h github.com -p ssh --skip-ssh-key -w'
+    echo '     表示されたコードを https://github.com/login/device で入力し Authorize'
+
+    step 'gh の設定を確認する'
+    echo '       gh auth status'
+    echo '     Git operations protocol が ssh、Token scopes に workflow が無いこと'
+    echo '     workflow があれば:'
+    echo '       gh auth refresh -h github.com --remove-scopes workflow'
+fi
+
+if "$IS_DOCKER" ; then
+    step 'docker グループの反映を確認する'
+    echo '       groups'
+    echo '     docker が含まれていれば OK'
+fi
+
 echo ''
-echo '      wsl --shutdown'
-echo ''
-echo '  Then start WSL2 again.'
 echo '====================================================='
 echo ''
